@@ -1,4 +1,4 @@
-import { GET_COUNTIES_LIST_FAIL, GET_COUNTIES_LIST_REQUEST, GET_COUNTIES_LIST_SUCCESS, GET_COUNTY_DETAILS_LIST_FAIL, GET_COUNTY_DETAILS_LIST_SUCCESS, GET_COUNTY_DETAILS_REQUEST, GET_STATES_LIST_FAIL, GET_STATES_LIST_REQUEST, GET_STATES_LIST_SUCCESS } from "../constants";
+import { GET_COUNTIES_LIST_FAIL, GET_COUNTIES_LIST_REQUEST, GET_COUNTIES_LIST_SUCCESS, GET_COUNTY_DETAILS_FAIL, GET_COUNTY_DETAILS_REQUEST, GET_COUNTY_DETAILS_SUCCESS, GET_STATES_LIST_FAIL, GET_STATES_LIST_REQUEST, GET_STATES_LIST_SUCCESS } from "../constants";
 import api from '../services/api';
 import {Dispatch} from "redux";
 
@@ -14,7 +14,7 @@ export const getStatesLists = () => async (dispatch:Dispatch) => {
   }
 };
 
-export const geCountiesListsByStateUF = (Uf:string) => async (dispatch:Dispatch) => {
+export const getCountiesListsByStateUF = (Uf:string) => async (dispatch:Dispatch) => {
   dispatch({
     type: GET_COUNTIES_LIST_REQUEST,
   });
@@ -26,14 +26,14 @@ export const geCountiesListsByStateUF = (Uf:string) => async (dispatch:Dispatch)
   }
 };
 
-export const geCountydetails = (countyId:string) => async (dispatch:Dispatch) => {
+export const getCountydetails = (countyId:string) => async (dispatch:Dispatch) => {
   dispatch({
     type: GET_COUNTY_DETAILS_REQUEST,
   });
   try {
     const { data } = await api.get(`/municipios/${countyId}/distritos`);
-    dispatch({ type: GET_COUNTY_DETAILS_LIST_SUCCESS, payload: data[0] });
+    dispatch({ type: GET_COUNTY_DETAILS_SUCCESS, payload: data[0] });
   } catch (error:any) {
-    dispatch({ type:  GET_COUNTY_DETAILS_LIST_FAIL, payload: error.message });
+    dispatch({ type:  GET_COUNTY_DETAILS_FAIL, payload: error.message });
   }
 };

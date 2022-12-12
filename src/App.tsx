@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { geCountiesListsByStateUF, geCountydetails, getStatesLists } from './actions';
+import { getCountiesListsByStateUF, getCountydetails, getStatesLists } from './actions';
 import "./App.css";
 
 const App = () => {
@@ -8,22 +8,14 @@ const App = () => {
   const [selectedStateUF, setSelectedStateUF] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
 
-  const stateList = useSelector((state: RootStateOrAny) => state.stateList);
+  const county = useSelector((state: RootStateOrAny) => state.county);
   const {
     states,
-    loading:loadingstates
-  } = stateList;
+    allCounties,
+    singleCounty,
+    loading
+  } = county;
 
-  const countyList = useSelector((state: RootStateOrAny) => state.countyList);
-  const {
-    counties,
-    loading:loadingConty
-  } = countyList;
-
-  const countyDetails = useSelector((state: RootStateOrAny) => state.countyDetails);
-  const {
-    county,
-  } = countyDetails;
 
   const dispatch = useDispatch()
 
@@ -35,23 +27,23 @@ const App = () => {
 
   useEffect(() => {
     dispatch(
-      geCountiesListsByStateUF(selectedStateUF)
+      getCountiesListsByStateUF(selectedStateUF)
     );
     if (selectedCounty) {
-      dispatch(geCountydetails(selectedCounty));
+      dispatch(getCountydetails(selectedCounty));
     }
   }, [selectedStateUF, dispatch, selectedCounty])
 
 
   function handleSelectState(event: ChangeEvent<HTMLSelectElement>) {
-    const state = event.target.value;
-    setSelectedStateUF(state);
+    const UF = event.target.value;
+    setSelectedStateUF(UF);
     setSelectedCounty("")
   }
 
   function handleSelectCounty(event: ChangeEvent<HTMLSelectElement>) {
-    const county = event.target.value;
-    setSelectedCounty(county);
+    const countyId = event.target.value;
+    setSelectedCounty(countyId);
   }
 
   return (
@@ -80,41 +72,42 @@ const App = () => {
               </div>
               <select name="county" id="county" value={selectedCounty} onChange={handleSelectCounty} className="round">
                 <option value="">Selecione</option>
-                {counties && counties.map((county: any) => (
+                {allCounties && allCounties.map((county: any) => (
                   <option key={county.id} value={county.id}>{county.nome}</option>
                 ))}
               </select>
             </div>
           </div>
-          {loadingConty || loadingstates ? <div>carregando</div> : ""
+          {
+          loading ? <div>carregando</div> : ""
           }
           {
-            selectedCounty && county && <div className="city-info_container">
+            selectedCounty && singleCounty && <div className="city-info_container">
               <h2>Dados gerais de município</h2>
               <div className="city-info_card">
                 <div className="city-info">
                   <div className="info-title">
                     Microrregião :
                   </div>
-                  <div>{county.municipio?.microrregiao?.nome}</div>
+                  <div>{singleCounty.municipio?.microrregiao?.nome}</div>
                 </div>
                 <div className="city-info">
                   <div className="info-title">
                     Mesorregião :
                   </div>
-                  <div>{county.municipio?.microrregiao?.mesorregiao?.nome}</div>
+                  <div>{singleCounty.municipio?.microrregiao?.mesorregiao?.nome}</div>
                 </div>
                 <div className="city-info">
                   <div className="info-title">
                     UF :
                   </div>
-                  <div>{county.municipio?.microrregiao?.mesorregiao.UF?.nome}</div>
+                  <div>{singleCounty.municipio?.microrregiao?.mesorregiao.UF?.nome}</div>
                 </div>
                 <div className="city-info">
                   <div className="info-title">
                     Região :
                   </div>
-                  <div>{county.municipio?.microrregiao?.mesorregiao.UF?.regiao?.nome}</div>
+                  <div>{singleCounty.municipio?.microrregiao?.mesorregiao.UF?.regiao?.nome}</div>
                 </div>
               </div>
             </div>
