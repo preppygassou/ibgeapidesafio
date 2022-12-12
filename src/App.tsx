@@ -75,10 +75,8 @@ const App = () => {
               </select>
             </div>
             <div className="select-wrapper">
-
               <div>
                 Selecione um município
-
               </div>
               <select name="county" id="county" value={selectedCounty} onChange={handleSelectCounty} className="round">
                 <option value="">Selecione</option>
@@ -91,7 +89,6 @@ const App = () => {
           {loadingConty || loadingstates ? <div>carregando</div> : ""
           }
           {
-
             selectedCounty && county && <div className="city-info_container">
               <h2>Dados gerais de município</h2>
               <div className="city-info_card">
